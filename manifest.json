@@ -1,0 +1,665 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-06-02T20:09:08.899Z",
+  "documentCount": 33,
+  "documents": [
+    {
+      "path": "index.md",
+      "title": "Sports Experience Guidelines",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2026-06-02",
+      "status": "draft",
+      "tags": [
+        "navigation",
+        "index",
+        "knowledge-architecture"
+      ],
+      "summary": "Root navigation document for the Sports Experience Guidelines framework. Provides links to all subdomains, cross-cutting areas, principles, ownership, and roadmap sections.",
+      "maturity": "in-progress",
+      "wordCount": 404
+    },
+    {
+      "path": "pillars/gaming/index.md",
+      "title": "Gaming Pillar",
+      "subdomain": "discovery",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "pod-design-system",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "gaming",
+        "pillar",
+        "navigation",
+        "placeholder"
+      ],
+      "summary": "Gaming pillar placeholder — covers Discovery, Engage, Bingo, and Poker subdomains for the gaming product.",
+      "maturity": "not-started",
+      "wordCount": 172
+    },
+    {
+      "path": "pillars/player-experience/index.md",
+      "title": "Player Experience Pillar",
+      "subdomain": "discovery",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "pod-design-system",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "player-experience",
+        "pillar",
+        "navigation",
+        "placeholder"
+      ],
+      "summary": "Player Experience pillar placeholder — covers Onboarding, Channels, Player Safety, and Payments & Cashier subdomains.",
+      "maturity": "not-started",
+      "wordCount": 185
+    },
+    {
+      "path": "pillars/sports/cross-cutting-areas/figma-project-template/overview.md",
+      "title": "Figma Project Template — Sports Betting",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "figma-project-template",
+      "documentType": "overview",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2026-04-16",
+      "status": "published",
+      "tags": [
+        "figma",
+        "template",
+        "project-structure",
+        "workflow"
+      ],
+      "summary": "Standard Figma file structure template for Sports Betting UX projects. Defines the page layout, naming conventions, and organisational structure that all Sports pillar designers should follow when setting up new project files.",
+      "maturity": "not-started",
+      "wordCount": 468
+    },
+    {
+      "path": "pillars/sports/cross-cutting-areas/horse-racing/greyhounds-on-digital.md",
+      "title": "Greyhounds on Digital",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "horse-racing",
+      "documentType": "overview",
+      "owner": "Sports UX",
+      "lastUpdated": "2025-06-13",
+      "status": "shipped",
+      "tags": [
+        "greyhounds",
+        "racing",
+        "horse-racing",
+        "new-sport",
+        "forecast",
+        "tricast",
+        "race-card"
+      ],
+      "summary": "Introduction of greyhound racing to digital platforms. A new sport addition covering entry points, race cards, forecast/tricast betting, and results — influenced by GBS with improvements over current horse racing journeys.",
+      "maturity": "not-started",
+      "wordCount": 708
+    },
+    {
+      "path": "pillars/sports/cross-cutting-areas/index.md",
+      "title": "Cross-Cutting Areas",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2025-07-14",
+      "status": "draft",
+      "tags": [
+        "cross-cutting",
+        "navigation",
+        "scope-map",
+        "multi-subdomain"
+      ],
+      "summary": "Overview of the ten cross-cutting experience areas that influence multiple subdomains across the sports betting product.",
+      "maturity": "not-started",
+      "wordCount": 343
+    },
+    {
+      "path": "pillars/sports/cross-cutting-areas/live-betting/research.md",
+      "title": "Live Betting — Research",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "live-betting",
+      "documentType": "research",
+      "owner": "Unassigned",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "live-betting"
+      ],
+      "summary": "TODO: Add a machine-readable summary of this document (max 200 words).",
+      "maturity": "not-started",
+      "wordCount": 267
+    },
+    {
+      "path": "pillars/sports/cross-cutting-areas/ux-process/guidelines.md",
+      "title": "Sports UX Process",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "ux-process",
+      "documentType": "guidelines",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2025-11-17",
+      "status": "published",
+      "tags": [
+        "process",
+        "ux-design",
+        "workflow",
+        "design-system"
+      ],
+      "summary": "The end-to-end UX process for the Sports pillar at Entain. Covers seven phases from Discovery through Post-Project, defining activities, deliverables, and quality gates at each stage.",
+      "maturity": "not-started",
+      "wordCount": 366
+    },
+    {
+      "path": "pillars/sports/discovery/market-layouts/in-play-market-stats-edp.md",
+      "title": "In-Play Market Stats on EDP",
+      "subdomain": "discovery",
+      "experienceArea": "market-layouts",
+      "documentType": "guideline",
+      "owner": "Tomek",
+      "lastUpdated": "2026-06-02",
+      "status": "draft",
+      "tags": [
+        "market-layouts",
+        "in-play",
+        "gamelines",
+        "metadata",
+        "edp",
+        "stats"
+      ],
+      "summary": "Design guidelines for displaying in-play statistical metadata on Game Lines (6-Pack) markets within the Event Detail Page (EDP). Covers bet distribution visualisation, line-value mapping, and edge-case handling.",
+      "maturity": "in-progress",
+      "wordCount": 915
+    },
+    {
+      "path": "pillars/sports/discovery/market-layouts/overview.md",
+      "title": "Market Layouts — Overview",
+      "subdomain": "discovery",
+      "experienceArea": "market-layouts",
+      "documentType": "overview",
+      "owner": "Tomek",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "market-layouts"
+      ],
+      "summary": "TODO: Add a machine-readable summary of this document (max 200 words).",
+      "maturity": "not-started",
+      "wordCount": 365
+    },
+    {
+      "path": "pillars/sports/discovery/search/research.md",
+      "title": "Sportsbook Search — User Intent and Usability Research",
+      "subdomain": "discovery",
+      "experienceArea": "search",
+      "documentType": "research",
+      "owner": "Chunyan Ren",
+      "lastUpdated": "2026-02-01",
+      "status": "published",
+      "tags": [
+        "search",
+        "usability",
+        "research",
+        "discovery",
+        "autosuggestions",
+        "mobile"
+      ],
+      "summary": "Qualitative usability study evaluating user intent, expectations, and breakdowns in the sportsbook search journey. 8 participants tested the Bwin app. Key finding: search is a high-intent fallback where trust breaks quickly due to poor autosuggestion relevance, cross-sport leakage, and weak visual hierarchy. SUS score: 82.2/100. Prioritised roadmap: NOW (restore trust), NEXT (reduce friction), LATER (global/AI search).",
+      "maturity": "not-started",
+      "wordCount": 2636
+    },
+    {
+      "path": "pillars/sports/index.md",
+      "title": "Sports Pillar",
+      "subdomain": "discovery",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "sports",
+        "navigation"
+      ],
+      "summary": "Sports pillar overview — covers Discovery, Transactional, and Post Bet subdomains for the sports betting product.",
+      "maturity": "in-progress",
+      "wordCount": 223
+    },
+    {
+      "path": "pillars/sports/post-bet/cash-out/overview.md",
+      "title": "Cash Out — Overview",
+      "subdomain": "post-bet",
+      "experienceArea": "cash-out",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "cash-out"
+      ],
+      "summary": "TODO: Add a machine-readable summary of this document (max 200 words).",
+      "maturity": "not-started",
+      "wordCount": 267
+    },
+    {
+      "path": "pillars/sports/post-bet/index.md",
+      "title": "Post Bet Subdomain",
+      "subdomain": "post-bet",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2025-07-14",
+      "status": "draft",
+      "tags": [
+        "post-bet",
+        "subdomain",
+        "navigation",
+        "tracking",
+        "cashout"
+      ],
+      "summary": "Overview of the Post Bet subdomain covering bet tracking, cashout, results, settlement, and post-placement engagement experiences.",
+      "maturity": "not-started",
+      "wordCount": 221
+    },
+    {
+      "path": "pillars/sports/post-bet/my-bets/ios-lock-screen-widget.md",
+      "title": "iOS Lock Screen Widget — Live Bet Tracking",
+      "subdomain": "post-bet",
+      "experienceArea": "my-bets",
+      "documentType": "patterns",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2026-05-29",
+      "status": "published",
+      "tags": [
+        "ios",
+        "widget",
+        "lock-screen",
+        "live-tracking",
+        "my-bets",
+        "post-bet",
+        "mobile"
+      ],
+      "summary": "iOS lock screen widget for live bet tracking. Allows users to track their active bets directly from the iPhone lock screen without opening the app. Covers entry points (My Bets, Bet Summary from Betslip, Quick Bet), onboarding flow, widget design (single, Build a Bet, pick scroller, thumbnail), multi-bet ideal journey, and future enhancements.",
+      "maturity": "not-started",
+      "wordCount": 503
+    },
+    {
+      "path": "pillars/sports/post-bet/my-bets/overview.md",
+      "title": "My Bets — Overview",
+      "subdomain": "post-bet",
+      "experienceArea": "my-bets",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "my-bets"
+      ],
+      "summary": "TODO: Add a machine-readable summary of this document (max 200 words).",
+      "maturity": "not-started",
+      "wordCount": 267
+    },
+    {
+      "path": "pillars/sports/post-bet/streaming/overview.md",
+      "title": "Streaming — Overview",
+      "subdomain": "post-bet",
+      "experienceArea": "streaming",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "streaming"
+      ],
+      "summary": "TODO: Add a machine-readable summary of this document (max 200 words).",
+      "maturity": "not-started",
+      "wordCount": 267
+    },
+    {
+      "path": "pillars/sports/principles.md",
+      "title": "Sports Betting UX Principles",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "principles",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2025-07-14",
+      "status": "draft",
+      "tags": [
+        "principles",
+        "ux",
+        "design-philosophy",
+        "decision-framework",
+        "sports-betting"
+      ],
+      "summary": "Six sports-betting-specific UX principles that guide all experience design decisions. Ordered by priority with evaluation questions, examples, and anti-patterns.",
+      "maturity": "not-started",
+      "wordCount": 2073
+    },
+    {
+      "path": "pillars/sports/retail/bet-builder/gbs-bet-builder-usability-research.md",
+      "title": "In-store GBS Usability Study — Football Bet Builder Journey",
+      "subdomain": "retail",
+      "experienceArea": "bet-builder",
+      "documentType": "research",
+      "owner": "Chunyan Ren",
+      "lastUpdated": "2026-01-01",
+      "status": "published",
+      "tags": [
+        "bet-builder",
+        "retail",
+        "gbs",
+        "usability",
+        "football"
+      ],
+      "summary": "Usability study evaluating the football Bet Builder journey on in-store GBS terminals. Conducted in Ladbrokes and Coral shops with 7 retail customers. Key finding: growth is blocked by confidence gaps, not basic usability. Three friction clusters identified: Bet Builder eligibility comprehension, multi-match clarity in the bet slip, and decision support quality.",
+      "maturity": "not-started",
+      "wordCount": 1149
+    },
+    {
+      "path": "pillars/sports/retail/index.md",
+      "title": "Retail",
+      "subdomain": "retail",
+      "experienceArea": "",
+      "documentType": "overview",
+      "owner": "",
+      "lastUpdated": "",
+      "status": "draft",
+      "tags": [
+        "sports",
+        "retail"
+      ],
+      "summary": "Retail sports betting experiences — in-shop screens and kiosks.",
+      "maturity": "not-started",
+      "wordCount": 36
+    },
+    {
+      "path": "pillars/sports/tools/index.md",
+      "title": "Tools",
+      "subdomain": "tools",
+      "experienceArea": "",
+      "documentType": "overview",
+      "owner": "",
+      "lastUpdated": "",
+      "status": "draft",
+      "tags": [
+        "sports",
+        "tools"
+      ],
+      "summary": "Internal tools supporting sports betting operations.",
+      "maturity": "not-started",
+      "wordCount": 16
+    },
+    {
+      "path": "pillars/sports/transactional/acca-boost/overview.md",
+      "title": "Acca Boost",
+      "subdomain": "transactional",
+      "experienceArea": "acca-boost",
+      "documentType": "overview",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2026-02-02",
+      "status": "published",
+      "tags": [
+        "acca-boost",
+        "parlay",
+        "transactional",
+        "promotions",
+        "betslip",
+        "bet-bar",
+        "shipped"
+      ],
+      "summary": "Complete documentation for Acca Boost (Parlay Boost) — the promotional feature that automatically increases returns on accumulator bets based on the number of selections. Covers the boost ladder progression, pop-up notifications, non-eligible leg handling, acca drawer component (regular and yellow bubble bet bar), info overlay, desktop mocks, and edge cases including max returns and long translations.",
+      "maturity": "not-started",
+      "wordCount": 637
+    },
+    {
+      "path": "pillars/sports/transactional/bet-bar/overview.md",
+      "title": "Betslip Bar",
+      "subdomain": "transactional",
+      "experienceArea": "bet-bar",
+      "documentType": "overview",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2026-03-26",
+      "status": "published",
+      "tags": [
+        "bet-bar",
+        "betslip",
+        "transactional",
+        "mobile",
+        "rewards",
+        "shipped"
+      ],
+      "summary": "Comprehensive documentation for the Betslip Bar (Bet Bar) — the persistent entry point to the betslip that displays selection count, accumulative odds, and reward indicators. Covers fixed and floating variants, configurable elements, happy journeys, edge cases, rewards integration, and cross-brand theming.",
+      "maturity": "not-started",
+      "wordCount": 755
+    },
+    {
+      "path": "pillars/sports/transactional/bet-builder/bet-builder-plus-experience.md",
+      "title": "Bet Builder+ Experience",
+      "subdomain": "transactional",
+      "experienceArea": "bet-builder",
+      "documentType": "overview",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2026-06-02",
+      "status": "published",
+      "tags": [
+        "bet-builder",
+        "bab-plus",
+        "sgm",
+        "responsive",
+        "transactional",
+        "shipped"
+      ],
+      "summary": "Build a Bet+ (BAB+) is the multi-event Same Game Multi experience. This document covers Part 2 of the BB+ project: the responsive game tab redesign for ROW and CILA brands, including mobile and desktop final designs, theming, user testing, and UAT rounds.",
+      "maturity": "not-started",
+      "wordCount": 452
+    },
+    {
+      "path": "pillars/sports/transactional/bet-insurance/overview.md",
+      "title": "Sports Promos — Bet Insurance",
+      "subdomain": "transactional",
+      "experienceArea": "bet-insurance",
+      "documentType": "overview",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2026-06-02",
+      "status": "published",
+      "tags": [
+        "bet-insurance",
+        "acca-boost",
+        "promos",
+        "betslip",
+        "transactional"
+      ],
+      "summary": "Bet Insurance is a promotional feature that provides users with insurance protection on accumulator bets. When combined with Acca Boost, it creates a dual-reward experience within the betslip and bet bar. This document covers the Phase I mobile final designs including happy journeys, betslip states, components, and promo tray integration.",
+      "maturity": "not-started",
+      "wordCount": 597
+    },
+    {
+      "path": "pillars/sports/transactional/betslip/overview.md",
+      "title": "Betslip",
+      "subdomain": "transactional",
+      "experienceArea": "betslip",
+      "documentType": "overview",
+      "owner": "David Lopez",
+      "lastUpdated": "2026-02-11",
+      "status": "published",
+      "tags": [
+        "betslip",
+        "transactional",
+        "mobile",
+        "theming",
+        "bet-placement",
+        "shipped"
+      ],
+      "summary": "Comprehensive documentation of the Full Betslip feature covering all bet types, error states, configurable elements, theming, rewards integration, and market-specific variations. This is the shipped specification for mobile betslip across all brands.",
+      "maturity": "not-started",
+      "wordCount": 831
+    },
+    {
+      "path": "pillars/sports/transactional/index.md",
+      "title": "Transactional Subdomain",
+      "subdomain": "transactional",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "Unassigned",
+      "lastUpdated": "2025-07-14",
+      "status": "draft",
+      "tags": [
+        "transactional",
+        "subdomain",
+        "navigation",
+        "betslip",
+        "placement"
+      ],
+      "summary": "Overview of the Transactional subdomain covering bet placement, betslip management, payment flows, and stake-related experiences.",
+      "maturity": "not-started",
+      "wordCount": 223
+    },
+    {
+      "path": "pillars/sports/transactional/price-boosts/research.md",
+      "title": "Odds Boost User Research — Jan 2026",
+      "subdomain": "transactional",
+      "experienceArea": "price-boosts",
+      "documentType": "research",
+      "owner": "Chunyan Ren",
+      "lastUpdated": "2026-01-15",
+      "status": "published",
+      "tags": [
+        "odds-boost",
+        "bet-builder",
+        "user-research",
+        "qualitative",
+        "ladbrokes",
+        "price-boosts",
+        "promotions"
+      ],
+      "summary": "Qualitative research with 8 high-value Ladbrokes bettors exploring whether Bet Builder Odds Boosts should be replaced with % Winning Boosts. Key finding: % boost could help novices but won't shift high-value behaviour. The real blocker to BB adoption is substitution risk, not boost format.",
+      "maturity": "not-started",
+      "wordCount": 840
+    },
+    {
+      "path": "pillars/sports/transactional/quick-bet/overview.md",
+      "title": "Quick Bet",
+      "subdomain": "transactional",
+      "experienceArea": "quick-bet",
+      "documentType": "overview",
+      "owner": "Sports UX Team",
+      "lastUpdated": "2026-04-17",
+      "status": "published",
+      "tags": [
+        "quick-bet",
+        "transactional",
+        "mobile",
+        "bet-placement",
+        "shipped"
+      ],
+      "summary": "Complete documentation for the Quick Bet feature — a streamlined, inline bet placement module that allows users to place bets without opening the full betslip. Covers single and multi selections, default stake behaviour, error states, odds handling, rewards, Build a Bet integration, market-specific variations (horse racing, football EW), and in-play signposting.",
+      "maturity": "not-started",
+      "wordCount": 946
+    },
+    {
+      "path": "pillars/sports/transactional/sports-promos/research.md",
+      "title": "Promo Tokens — Research",
+      "subdomain": "discovery",
+      "experienceArea": "promo-tokens",
+      "documentType": "research",
+      "owner": "Chunyan",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "promo-tokens"
+      ],
+      "summary": "TODO: Add a machine-readable summary of this document (max 200 words).",
+      "maturity": "not-started",
+      "wordCount": 365
+    },
+    {
+      "path": "principles/organisation.md",
+      "title": "Organisation-Wide Design Principles",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "principles",
+      "documentType": "principles",
+      "owner": "pod-design-system",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "principles",
+        "organisation",
+        "cross-pillar",
+        "design-philosophy"
+      ],
+      "summary": "Organisation-wide UX principles that apply across all pillars (Sports, Gaming, Player Experience). Pillar-specific principles extend these.",
+      "maturity": "not-started",
+      "wordCount": 276
+    },
+    {
+      "path": "shared/index.md",
+      "title": "Shared Experience Areas",
+      "subdomain": "cross-cutting-areas",
+      "experienceArea": "navigation",
+      "documentType": "overview",
+      "owner": "pod-design-system",
+      "lastUpdated": "2026-06-01",
+      "status": "draft",
+      "tags": [
+        "shared",
+        "cross-pillar",
+        "navigation"
+      ],
+      "summary": "Cross-pillar shared experience areas that apply to Sports, Gaming, and Player Experience — governed by Design Ops.",
+      "maturity": "not-started",
+      "wordCount": 199
+    },
+    {
+      "path": "transactional/bet-builder/overview.md",
+      "title": "Bet Builder — Overview",
+      "subdomain": "transactional",
+      "experienceArea": "bet-builder",
+      "documentType": "overview",
+      "owner": "David",
+      "lastUpdated": "2026-06-02",
+      "status": "draft",
+      "tags": [
+        "bet-builder"
+      ],
+      "summary": "TODO: Add a machine-readable summary of this document (max 200 words).",
+      "maturity": "not-started",
+      "wordCount": 267
+    }
+  ],
+  "relationships": [
+    {
+      "source": "pillars/sports/cross-cutting-areas/index.md",
+      "target": "pillars/sports/cross-cutting-areas/live-betting/research.md",
+      "type": "related-to"
+    },
+    {
+      "source": "pillars/sports/discovery/market-layouts/in-play-market-stats-edp.md",
+      "target": "pillars/sports/discovery/market-layouts/overview.md",
+      "type": "related-to"
+    },
+    {
+      "source": "pillars/sports/discovery/market-layouts/in-play-market-stats-edp.md",
+      "target": "pillars/sports/cross-cutting-areas/live-betting/research.md",
+      "type": "related-to"
+    },
+    {
+      "source": "pillars/sports/index.md",
+      "target": "pillars/sports/principles.md",
+      "type": "related-to"
+    },
+    {
+      "source": "pillars/sports/transactional/index.md",
+      "target": "pillars/sports/transactional/acca-boost/patterns.md",
+      "type": "related-to"
+    },
+    {
+      "source": "pillars/sports/transactional/index.md",
+      "target": "pillars/sports/transactional/betslip/guidelines.md",
+      "type": "related-to"
+    }
+  ]
+}

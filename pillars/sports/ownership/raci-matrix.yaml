@@ -1,0 +1,60 @@
+experience-areas:
+  - area: "live-betting"
+    subdomain: "cross-cutting-areas"
+    raci:
+      responsible: "Tomek Osinski"
+      accountable: "Tomek Osinski"
+      consulted: ["Agnes Smith", "Designer A"]
+      informed: ["Designer C"]
+    review-cadence: "quarterly"
+    last-reviewed: "2025-01-15"
+
+  - area: "pre-match"
+    subdomain: "discovery"
+    raci:
+      responsible: "Tomek Osinski"
+      accountable: "Tomek Osinski"
+      consulted: ["Designer A"]
+      informed: ["Designer C"]
+    review-cadence: "quarterly"
+    last-reviewed: "2025-02-01"
+
+  - area: "betslip"
+    subdomain: "transactional"
+    raci:
+      responsible: "Unassigned"
+      accountable: "Unassigned"
+      consulted: ["Designer B"]
+      informed: ["Designer C"]
+    review-cadence: "quarterly"
+    last-reviewed: "2025-01-20"
+
+  - area: "cash-out"
+    subdomain: "post-bet"
+    raci:
+      responsible: "Unassigned"
+      accountable: "Unassigned"
+      consulted: ["Designer B"]
+      informed: ["Designer C", "Tomek Osinski"]
+    review-cadence: "quarterly"
+    last-reviewed: "2024-10-15"
+
+  - area: "personalisation"
+    subdomain: "cross-cutting-areas"
+    raci:
+      responsible: "Agnes Smith"
+      accountable: "Agnes Smith"
+      consulted: ["Tomek Osinski", "Designer B"]
+      informed: ["Designer C"]
+    review-cadence: "quarterly"
+    last-reviewed: "2025-03-01"
+
+  - area: "design-system"
+    subdomain: "cross-cutting-areas"
+    raci:
+      responsible: "Designer C"
+      accountable: "Designer C"
+      consulted: ["Tomek Osinski", "Agnes Smith", "Designer B"]
+      informed: []
+    review-cadence: "quarterly"
+    last-reviewed: "2025-03-15"

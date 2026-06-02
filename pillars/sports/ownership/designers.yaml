@@ -1,0 +1,24 @@
+designers:
+  - name: "Tomek Osinski"
+    role: "Lead Designer"
+    areas: ["live-betting", "pre-match", "event-detail"]
+
+  - name: "Agnes Smith"
+    role: "Lead Designer"
+    areas: ["search", "homepage", "personalisation"]
+
+  - name: "Unassigned"
+    role: "Lead Designer"
+    areas: ["betslip", "cash-out", "my-bets", "streaming", "acca-boost"]
+
+  - name: "Designer A"
+    role: "Designer"
+    areas: ["live-betting", "pre-match"]
+
+  - name: "Designer B"
+    role: "Designer"
+    areas: ["betslip", "cash-out"]
+
+  - name: "Designer C"
+    role: "Lead Designer"
+    areas: ["design-system"]

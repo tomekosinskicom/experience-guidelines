@@ -1,0 +1,35 @@
+{
+  "name": "sports-experience-guidelines",
+  "version": "0.1.0",
+  "description": "Sports Experience Guidelines framework — knowledge architecture with CLI tooling for validation, manifest generation, and AI-consumable retrieval",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate": "node --loader ts-node/esm tools/src/validate.ts",
+    "manifest": "node --loader ts-node/esm tools/src/manifest.ts",
+    "scaffold": "node --loader ts-node/esm tools/src/scaffold.ts",
+    "import": "node --loader ts-node/esm tools/src/import.ts",
+    "dashboard": "tsx tools/src/dashboard.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^20.11.0",
+    "@types/pdf-parse": "^1.1.4",
+    "fast-check": "^3.15.0",
+    "tsx": "^4.22.4",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1",
+    "yaml": "^2.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

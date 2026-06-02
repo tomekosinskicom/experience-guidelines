@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "document-types.json",
+  "title": "Document Types",
+  "description": "Closed enumerated list of valid document types for Sports Experience Guidelines",
+  "definitions": {
+    "documentType": {
+      "type": "string",
+      "enum": [
+        "overview",
+        "principles",
+        "patterns",
+        "research",
+        "decisions",
+        "guidelines",
+        "examples"
+      ],
+      "description": "Valid document type identifier"
+    }
+  },
+  "type": "object",
+  "properties": {
+    "types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/documentType"
+      },
+      "description": "The complete list of valid document types"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "overview": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "typicalContent": {
+              "type": "string"
+            }
+          }
+        },
+        "principles": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "typicalContent": {
+              "type": "string"
+            }
+          }
+        },
+        "patterns": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "typicalContent": {
+              "type": "string"
+            }
+          }
+        },
+        "research": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "typicalContent": {
+              "type": "string"
+            }
+          }
+        },
+        "decisions": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "typicalContent": {
+              "type": "string"
+            }
+          }
+        },
+        "guidelines": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "typicalContent": {
+              "type": "string"
+            }
+          }
+        },
+        "examples": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "typicalContent": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "enum": [
+    "overview",
+    "principles",
+    "patterns",
+    "research",
+    "decisions",
+    "guidelines",
+    "examples"
+  ]
+}

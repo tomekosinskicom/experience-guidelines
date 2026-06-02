@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "naming-rules.json",
+  "title": "Naming Convention Rules",
+  "description": "Naming convention rules for folders and files in Sports Experience Guidelines",
+  "definitions": {
+    "kebabCaseName": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 64,
+      "description": "A valid kebab-case name: lowercase alphanumeric segments separated by single hyphens, max 64 characters"
+    },
+    "fileName": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.md$",
+      "maxLength": 64,
+      "description": "A valid file name: kebab-case with .md extension, max 64 characters"
+    }
+  },
+  "type": "object",
+  "properties": {
+    "folder": {
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "const": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "maxLength": {
+          "type": "integer",
+          "const": 64
+        },
+        "description": {
+          "type": "string",
+          "const": "Folder names must be lowercase-kebab-case, max 64 characters"
+        }
+      },
+      "required": [
+        "pattern",
+        "maxLength",
+        "description"
+      ]
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "const": "^[a-z0-9]+(-[a-z0-9]+)*\\.md$"
+        },
+        "maxLength": {
+          "type": "integer",
+          "const": 64
+        },
+        "extension": {
+          "type": "string",
+          "const": ".md"
+        },
+        "description": {
+          "type": "string",
+          "const": "File names must be lowercase-kebab-case with .md extension, max 64 characters"
+        }
+      },
+      "required": [
+        "pattern",
+        "maxLength",
+        "extension",
+        "description"
+      ]
+    },
+    "pathSegment": {
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "const": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "description": {
+          "type": "string",
+          "const": "Each path segment must be lowercase-kebab-case"
+        }
+      },
+      "required": [
+        "pattern",
+        "description"
+      ]
+    }
+  },
+  "required": [
+    "folder",
+    "file",
+    "pathSegment"
+  ]
+}
