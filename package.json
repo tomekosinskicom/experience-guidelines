@@ -4,8 +4,7 @@
   "description": "Sports Experience Guidelines framework — knowledge architecture with CLI tooling for validation, manifest generation, and AI-consumable retrieval",
   "type": "module",
   "scripts": {
-    "build": "tsx tools/src/build-static.ts",
-    "build:tsc": "tsc",
+    "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
     "validate": "node --loader ts-node/esm tools/src/validate.ts",
