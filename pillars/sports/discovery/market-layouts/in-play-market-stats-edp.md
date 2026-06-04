@@ -6,6 +6,7 @@ document-type: guideline
 owner: Tomek
 last-updated: 2026-06-02
 status: draft
+maturity: in-progress
 tags:
   - market-layouts
   - in-play
@@ -14,7 +15,6 @@ tags:
   - edp
   - stats
 summary: "Design guidelines for displaying in-play statistical metadata on Game Lines (6-Pack) markets within the Event Detail Page (EDP). Covers bet distribution visualisation, line-value mapping, and edge-case handling."
-maturity: in-progress
 relationships:
   related-to:
     - "pillars/sports/discovery/market-layouts/overview.md"
@@ -34,15 +34,21 @@ The metadata is displayed as a graphical representation of bet volume distributi
 
 **Scope:** Football (primary), Basketball (secondary). Mobile-first with multi-brand theming support.
 
+---
+
 ## Principles in Context
 
 - **Informed Betting** — Provide customers with contextual data that supports decision-making without overloading the market card.
 - **Data Integrity** — Metadata must always be mapped to the correct, currently-displayed line value. Stale or misaligned data is worse than no data.
 - **Progressive Disclosure** — Stats supplement the core betting experience; they must not displace odds or interfere with selection interaction.
 
+---
+
 ## Problem Statement
 
 For the Game Lines (6-Pack) markets, we should display metadata representing the number of bets placed on each market (and the specific line value shown). Metadata helps customers decide on the outcome they will place a bet on.
+
+---
 
 ## Functional Requirements
 
@@ -50,11 +56,46 @@ For the Game Lines (6-Pack) markets, we should display metadata representing the
 - Metadata must be mapped to the specific line value shown for that selection.
 - Metadata must update when the associated line value changes.
 
+---
+
 ## Scope Constraints (Must Not Change)
 
 - Odds display and calculation must remain unchanged.
 - Market structure (Game Lines layout and grouping) must remain unchanged.
 - Selection interaction (tap/click behaviour) must remain unchanged.
+
+---
+
+## Stat Display State Table
+
+| State | Condition | Visual Behaviour | Fallback |
+|-------|-----------|-----------------|----------|
+| **Happy Path** | Bet volume data available, line value stable | Stat bar renders below selections showing relative distribution | N/A |
+| **No Bet Volume** | Insufficient data (new market, low traffic) | No metadata renders; market card uses default layout | Silent removal — no placeholder |
+| **Market Suspended** | Market suspended during in-play event | Metadata paused; bar hidden alongside market | Follows existing suspension pattern |
+| **Market Resumed** | Market resumes after suspension | Metadata refreshes with current values and re-renders | N/A |
+| **Rapid Line Change** | Line values change faster than metadata refresh | Stale metadata suppressed until fresh data aligns | Bar hidden temporarily |
+| **Data Feed Drops** | Metadata was visible but data feed lost mid-session | Bar gracefully removed without layout shift | Silent removal |
+| **Single Selection Dominance** | One selection has near-100% distribution | Bar renders proportionally; minority side never collapses to zero-width | Minimum visible width enforced |
+| **Compact Card** | Small viewport or constrained market card | Metadata may be truncated or hidden | Core betting functionality preserved |
+
+---
+
+## Decision Rules
+
+Use these rules when deciding whether to show stat metadata:
+
+| Rule | Decision |
+|------|----------|
+| Data available AND line value stable | ✅ Show metadata |
+| Data available BUT line value just changed | ⏸ Suppress until data aligns with new line |
+| No data OR volume too low | ❌ Do not render — silent fallback |
+| Market is suspended | ❌ Hide metadata alongside market |
+| Market resumed after suspension | ✅ Refresh and show if data available |
+| Layout cannot accommodate metadata (compact) | ❌ Hide metadata; preserve betting UX |
+| Data feed drops after metadata was visible | ❌ Remove gracefully, no layout shift |
+
+---
 
 ## Guidelines
 
@@ -106,6 +147,25 @@ When a market is suspended during an in-play event:
 - **Single selection dominance**: If one selection has near-100% distribution, still render the bar proportionally (do not collapse the minority side to zero-width).
 - **Data unavailable mid-session**: If metadata was displayed but data feed drops, gracefully remove the visualisation without layout shift.
 
+---
+
+## Configurable Elements
+
+| Element | Configuration Surface | Default | Notes |
+|---------|----------------------|---------|-------|
+| Feature flag (show/hide metadata) | Per brand | Off | Controls whether metadata renders at all |
+| Stat bar colour — majority | Brand semantic token | Primary action colour | Must pass 4.5:1 contrast in both themes |
+| Stat bar colour — minority | Brand semantic token | Secondary/muted | Must remain visible (min width enforced) |
+| Stat bar height | Design-system spacing scale | 4px | Follows spacing token |
+| Stat bar corner radius | Design-system radius scale | 2px | Follows radius token |
+| Minimum bar segment width | Fixed | 8px | Prevents zero-width rendering |
+| Refresh debounce on line change | Time (ms) | TBD | Prevents flicker on rapid line changes |
+
+<!-- TODO: Confirm refresh debounce timing with engineering — what is the acceptable delay before re-rendering? -->
+<!-- TODO: Define minimum bet volume threshold for "data available" — is this a percentage, absolute count, or configurable per brand? -->
+
+---
+
 ## Component Map
 
 | Layer | Component | ID | L3 Customisation Surface |
@@ -119,6 +179,8 @@ L3 Assembly Decisions:
 - Bar colours use brand semantic tokens for distribution visualisation.
 - Stat bar height and corner radius follow design-system spacing scale.
 
+---
+
 ## Theming
 
 The metadata visualisation supports multi-brand theming:
@@ -128,15 +190,21 @@ The metadata visualisation supports multi-brand theming:
 - Market card container uses `DS Card (clickable=false)` component with surface/elevated/border/radius variants.
 - Brand-specific label treatments are supported via the design-system theming layer.
 
+---
+
 ## Examples
 
 - **Figma Source**: [SPO-10019 | In-Play Stats EDP — Documentation](https://www.figma.com/design/Nfma3jWuTYPBf1wkcLqrv7/SPO-10019-%7C-In-play-Stats-EDP?node-id=3121-391)
 - Key screens documented: Current Journey, Happy Path, No Bet Volume, Market Suspended, Visual Treatment, Edge Cases, Metadata Placement, Theming
 
+---
+
 ## Research References
 
 - Reference (non-binding): Visual approach inspired by BetMGM-style market metadata.
 - See competitor analysis in Figma file (page: "🤺 Competitor Analysis").
+
+---
 
 ## Decision Log
 
@@ -145,6 +213,8 @@ The metadata visualisation supports multi-brand theming:
 | 2026-06-02 | Metadata suppressed when data unavailable rather than showing empty state | Avoids misleading customers with zero/stale values |
 | 2026-06-02 | Metadata bound to specific line value, not market-level | Game Lines frequently shift line values; metadata must track per-selection |
 | 2026-06-02 | Scope limited to Game Lines (6-Pack) initially | Highest-volume market type; validates pattern before broader rollout |
+
+---
 
 ## Related Areas
 

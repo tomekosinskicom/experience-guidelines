@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sports UX Knowledge Assistant</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f1117;color:#e1e4e8;height:100vh;display:flex;flex-direction:column}
+.header{padding:16px 24px;border-bottom:1px solid #30363d;display:flex;align-items:center;gap:12px}
+.header h1{font-size:18px;color:#fff}
+.header .badge{font-size:11px;padding:2px 8px;border-radius:12px;background:#1f6feb22;color:#58a6ff;border:1px solid #58a6ff44}
+.chat-area{flex:1;overflow-y:auto;padding:24px;max-width:800px;width:100%;margin:0 auto}
+.message{margin-bottom:20px;display:flex;gap:12px}
+.message.user{flex-direction:row-reverse}
+.message .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.message.assistant .avatar{background:#1f6feb22;color:#58a6ff}
+.message.user .avatar{background:#21262d;color:#8b949e}
+.message .bubble{max-width:85%;padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.6}
+.message.assistant .bubble{background:#161b22;border:1px solid #30363d;border-radius:12px 12px 12px 2px}
+.message.user .bubble{background:#1f6feb;color:#fff;border-radius:12px 12px 2px 12px}
+.message .bubble h3{font-size:14px;font-weight:600;margin:8px 0 4px;color:#fff}
+.message .bubble p{margin-bottom:8px}
+.message .bubble code{background:#0d1117;padding:2px 5px;border-radius:3px;font-size:12px;color:#f0883e}
+.message .bubble table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.message .bubble th{text-align:left;padding:4px 8px;border-bottom:1px solid #30363d;color:#8b949e}
+.message .bubble td{padding:4px 8px;border-bottom:1px solid #21262d}
+.message .bubble ul{padding-left:16px;margin:4px 0}
+.message .bubble li{margin-bottom:2px;font-size:13px}
+.message .source{font-size:11px;color:#8b949e;margin-top:8px;padding-top:8px;border-top:1px solid #30363d}
+.message .source a{color:#58a6ff;text-decoration:none}
+.input-area{padding:16px 24px;border-top:1px solid #30363d;max-width:800px;width:100%;margin:0 auto}
+.input-row{display:flex;gap:8px}
+.input-row input{flex:1;padding:12px 16px;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e1e4e8;font-size:14px;outline:none}
+.input-row input:focus{border-color:#58a6ff}
+.input-row button{padding:12px 20px;background:#238636;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer}
+.input-row button:hover{background:#2ea043}
+.input-row button:disabled{background:#21262d;color:#484f58;cursor:not-allowed}
+.suggestions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.suggestions button{padding:6px 12px;background:#21262d;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:12px;cursor:pointer}
+.suggestions button:hover{border-color:#58a6ff;color:#58a6ff}
+.loading{display:flex;gap:4px;padding:8px 0}
+.loading span{width:6px;height:6px;background:#58a6ff;border-radius:50%;animation:bounce 1.4s infinite}
+.loading span:nth-child(2){animation-delay:0.2s}
+.loading span:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Sports UX Knowledge Assistant</h1>
+  <span class="badge">AI-Powered</span>
+</div>
+<div class="chat-area" id="chat">
+  <div class="message assistant">
+    <div class="avatar">🧠</div>
+    <div class="bubble">
+      <p>Hi! I'm the Sports UX Knowledge Assistant. I have access to the full Experience Design Guidelines — betslip specs, bet bar states, search research, navigation patterns, and more.</p>
+      <p>Ask me anything about the sports betting experience design. I'll answer with references to the source documentation.</p>
+    </div>
+  </div>
+</div>
+<div class="input-area">
+  <div class="suggestions">
+    <button onclick="askQuestion(this.textContent)">What states does the betslip have?</button>
+    <button onclick="askQuestion(this.textContent)">How does odds acceptance work?</button>
+    <button onclick="askQuestion(this.textContent)">What varies per brand in the bet bar?</button>
+    <button onclick="askQuestion(this.textContent)">What did search research find?</button>
+  </div>
+  <div class="input-row">
+    <input type="text" id="input" placeholder="Ask about sports betting UX..." onkeydown="if(event.key==='Enter')ask()">
+    <button onclick="ask()" id="send-btn">Ask</button>
+  </div>
+</div>
+<script>
+const API_BASE = 'http://localhost:3847';
+let knowledgeBase = [];
+
+async function loadKnowledge() {
+  try {
+    const res = await fetch(API_BASE + '/api/manifest');
+    const manifest = await res.json();
+    // Load all document contents
+    for (const doc of manifest.documents) {
+      try {
+        const docRes = await fetch(API_BASE + '/api/document?path=' + encodeURIComponent(doc.path));
+        const docData = await docRes.json();
+        knowledgeBase.push({
+          path: doc.path,
+          title: doc.title,
+          summary: doc.summary,
+          tags: doc.tags,
+          content: docData.content,
+          subdomain: doc.subdomain,
+          area: doc.experienceArea
+        });
+      } catch(e) {}
+    }
+    console.log('Loaded', knowledgeBase.length, 'documents');
+  } catch(e) {
+    console.error('Failed to load knowledge base', e);
+  }
+}
+
+function searchKnowledge(query) {
+  const q = query.toLowerCase();
+  const terms = q.split(/\s+/).filter(t => t.length > 2);
+  
+  return knowledgeBase
+    .map(doc => {
+      let score = 0;
+      const searchable = (doc.title + ' ' + doc.summary + ' ' + doc.tags.join(' ') + ' ' + doc.content).toLowerCase();
+      
+      terms.forEach(term => {
+        // Title match (high weight)
+        if (doc.title.toLowerCase().includes(term)) score += 10;
+        // Tag match
+        if (doc.tags.some(t => t.includes(term))) score += 5;
+        // Summary match
+        if ((doc.summary || '').toLowerCase().includes(term)) score += 3;
+        // Content match (count occurrences, cap at 5)
+        const matches = (searchable.match(new RegExp(term, 'g')) || []).length;
+        score += Math.min(matches, 5);
+      });
+      
+      return { ...doc, score };
+    })
+    .filter(doc => doc.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+}
+
+function extractRelevantSections(content, query) {
+  const lines = content.split('\n');
+  const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
+  const sections = [];
+  let currentSection = '';
+  let currentContent = [];
+  
+  for (const line of lines) {
+    if (line.startsWith('## ') || line.startsWith('### ')) {
+      if (currentSection && currentContent.length > 0) {
+        const text = currentContent.join('\n');
+        const relevance = terms.filter(t => text.toLowerCase().includes(t)).length;
+        if (relevance > 0) {
+          sections.push({ heading: currentSection, content: text.slice(0, 500), relevance });
+        }
+      }
+      currentSection = line.replace(/^#+\s*/, '');
+      currentContent = [];
+    } else {
+      currentContent.push(line);
+    }
+  }
+  // Last section
+  if (currentSection && currentContent.length > 0) {
+    const text = currentContent.join('\n');
+    const relevance = terms.filter(t => text.toLowerCase().includes(t)).length;
+    if (relevance > 0) {
+      sections.push({ heading: currentSection, content: text.slice(0, 500), relevance });
+    }
+  }
+  
+  return sections.sort((a, b) => b.relevance - a.relevance).slice(0, 3);
+}
+
+function generateAnswer(query, results) {
+  if (results.length === 0) {
+    return { text: "I couldn't find specific documentation about that. Try rephrasing your question or ask about a specific feature like betslip, bet bar, search, or quick bet.", sources: [] };
+  }
+  
+  let answer = '';
+  const sources = [];
+  
+  results.forEach(doc => {
+    const sections = extractRelevantSections(doc.content, query);
+    if (sections.length > 0) {
+      sources.push({ title: doc.title, path: doc.path });
+      sections.forEach(section => {
+        // Clean up markdown for display
+        let cleaned = section.content
+          .replace(/^\s*[-|].*$/gm, line => line) // keep table/list lines
+          .replace(/^---$/gm, '')
+          .replace(/\*\*/g, '')
+          .trim();
+        if (cleaned.length > 0) {
+          answer += '<h3>' + section.heading + '</h3>';
+          // Simple markdown-to-html for display
+          cleaned = cleaned
+            .replace(/\|([^|]+)\|/g, (m) => m) // leave tables
+            .replace(/^- (.+)$/gm, '<li>$1</li>')
+            .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>');
+          answer += '<p>' + cleaned + '</p>';
+        }
+      });
+    }
+  });
+  
+  if (!answer) {
+    answer = '<p>I found relevant documents but couldn\'t extract a specific answer. Here are the most relevant sources:</p><ul>';
+    results.slice(0, 3).forEach(doc => {
+      answer += '<li><strong>' + doc.title + '</strong> — ' + (doc.summary || '').slice(0, 100) + '</li>';
+    });
+    answer += '</ul>';
+  }
+  
+  return { text: answer, sources };
+}
+
+function addMessage(role, content, sources) {
+  const chat = document.getElementById('chat');
+  const msg = document.createElement('div');
+  msg.className = 'message ' + role;
+  
+  let html = '<div class="avatar">' + (role === 'user' ? '👤' : '🧠') + '</div>';
+  html += '<div class="bubble">';
+  if (role === 'user') {
+    html += '<p>' + content + '</p>';
+  } else {
+    html += content;
+    if (sources && sources.length > 0) {
+      html += '<div class="source">Sources: ';
+      html += sources.map(s => '<a href="' + API_BASE + '/' + s.path.replace(/^pillars\//, '').replace(/\.md$/, '') + '" target="_blank">' + s.title + '</a>').join(' · ');
+      html += '</div>';
+    }
+  }
+  html += '</div>';
+  msg.innerHTML = html;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function showLoading() {
+  const chat = document.getElementById('chat');
+  const loader = document.createElement('div');
+  loader.className = 'message assistant';
+  loader.id = 'loader';
+  loader.innerHTML = '<div class="avatar">🧠</div><div class="bubble"><div class="loading"><span></span><span></span><span></span></div></div>';
+  chat.appendChild(loader);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function hideLoading() {
+  const loader = document.getElementById('loader');
+  if (loader) loader.remove();
+}
+
+function ask() {
+  const input = document.getElementById('input');
+  const query = input.value.trim();
+  if (!query) return;
+  
+  input.value = '';
+  askQuestion(query);
+}
+
+function askQuestion(query) {
+  addMessage('user', query);
+  showLoading();
+  
+  // Small delay to simulate thinking
+  setTimeout(() => {
+    const results = searchKnowledge(query);
+    const { text, sources } = generateAnswer(query, results);
+    hideLoading();
+    addMessage('assistant', text, sources);
+  }, 300);
+}
+
+// Load knowledge on page load
+loadKnowledge();
+</script>
+</body>
+</html>

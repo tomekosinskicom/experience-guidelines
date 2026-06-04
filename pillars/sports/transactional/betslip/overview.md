@@ -5,7 +5,7 @@ experience-area: betslip
 document-type: overview
 owner: David Lopez
 contributors: [Surrender, Bianca]
-last-updated: 2026-06-02
+last-updated: 2026-06-03
 status: published
 maturity: documented
 tags:
@@ -15,7 +15,8 @@ tags:
   - theming
   - bet-placement
   - shipped
-summary: "Comprehensive documentation of the Full Betslip feature covering all bet types, error states, configurable elements, theming, rewards integration, and market-specific variations. This is the shipped specification for mobile betslip across all brands."
+figma-source: "https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk/Full-Betslip-Shipped"
+summary: "The Full Betslip handles bet construction, stake input, odds display, error handling, and bet confirmation across all bet types and brands. Covers single/multi/system bets, odds acceptance modes, non-combinable conflicts, rewards integration, configurable elements per brand, and accessibility."
 research:
   - title: "Odds Boost User Research"
     date: 2026-01
@@ -27,26 +28,67 @@ research:
 
 The Full Betslip is the core transactional component in the sports betting experience. It handles bet construction, stake input, odds display, error handling, and bet confirmation across all bet types and brands.
 
-**Figma source:** [Full Betslip — 🚀 Shipped](https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk/Full-Betslip---%F0%9F%9A%80-Shipped?node-id=28219-88598)
-
+**Figma:** [Full Betslip — 🚀 Shipped](https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk/Full-Betslip---%F0%9F%9A%80-Shipped?node-id=28219-88598)
 **Status:** Shipped and live across all brands
 **Platforms:** Mobile (primary), Tablet (adapted), Desktop (separate doc)
 
 ---
 
+## State Table
+
+| State | Condition | Visual | User Actions |
+|-------|-----------|--------|-------------|
+| **Empty** | 0 selections | Empty state illustration | Close betslip |
+| **Single (stake empty)** | 1 selection, no stake entered | Selection card + empty input + disabled CTA | Enter stake, remove selection |
+| **Single (stake entered)** | 1 selection, valid stake | Selection card + returns shown + active CTA | Place bet, adjust stake, remove selection |
+| **Multi (all combinable)** | 2+ combinable selections | Multi tab active, combined odds, single stake input | Place bet, switch to Singles, remove selections |
+| **Singles (multiple)** | 2+ selections, not all combinable | Singles tab active, individual stake per card | Place bet, remove selections |
+| **System bet** | 3+ selections, System tab active | System bet options shown | Select system type, enter stake |
+| **Non-combinable conflict** | Conflicting selections present | Orange badges, warning banner, Multi tab disabled | Remove conflict, place as singles, move to BAB |
+| **Odds changed (paused)** | Price moved + user must accept | Yellow flash, struck-through old odds, "Accept" CTA | Accept & place, cancel |
+| **Odds changed (auto)** | Price moved + auto-accept on | Silent update, green/red arrow indicator | Continue normally |
+| **Selection suspended** | Market suspended in-play | "Suspended" badge on card, CTA disabled | Wait or remove selection |
+| **Selection closed** | Market closed permanently | "Closed" badge, CTA disabled | Remove closed selection |
+| **Processing** | Bet submitted, awaiting response | Spinner on CTA, inputs locked | Wait |
+| **Success (receipt)** | Bet confirmed by backend | Bet receipt with returns, "Done" CTA | Done / track bet / re-bet |
+| **Error (network)** | Submission failed | Retry dialog | Try again / cancel |
+| **Boost active** | Acca Boost ≥3 legs eligible | Boost badge, boosted returns, ladder | Add more legs, place bet |
+
+---
+
+## Decision Rules
+
+| Condition | Rule |
+|-----------|------|
+| 1 selection | Show Single view — no bet type tabs |
+| 2+ selections AND all combinable | Default to Multi tab (73% of users intend accas) |
+| 2+ selections AND some non-combinable | Show Singles tab active; Multi tab disabled; conflict banner |
+| 3+ selections AND all combinable | Show System tab option alongside Multi/Singles |
+| Acca Boost: ≥3 legs AND all combinable | Show boost badge and enhanced returns |
+| Acca Boost: 1 leg from next tier | Show upsell: "Add 1 more for +{next}%" |
+| Stake = 0 OR below minimum | CTA disabled |
+| Stake entered AND ≥ minimum | CTA active: "Place Bet · £{totalStake}" |
+| Odds change + "Always accept" mode | Update silently, no interruption |
+| Odds change + "Accept higher only" AND higher | Update silently |
+| Odds change + "Accept higher only" AND lower | Pause: show "Accept & Place Bet" |
+| Odds change + "Never auto-accept" | Always pause: show "Accept & Place Bet" |
+| Price Boost selection + stake > max boost stake | Inline error: "Max stake for this boost: £{max}" |
+| Selection removed → 2+ remaining | Recalculate odds; Multi tab stays |
+| Selection removed → 1 remaining | Revert to single; hide Multi/System tabs |
+| Selection removed → 0 remaining | Close betslip |
+| Selection removed (any) | Show undo toast for 5 seconds |
+
+---
+
 ## Design Principles
 
-These principles govern all betslip decisions. When in conflict, higher-numbered principles yield to lower:
-
-1. **Never lose user intent** — Stake values, selections, and preferences must persist through errors, odds changes, and navigation. Users must never re-enter what they already told us.
-
-2. **Make cost and reward crystal clear** — Total stake, potential returns, and any deductions (tax, token value) must be visible at all times without scrolling past the CTA.
-
-3. **Errors are recoverable, not blocking** — Every error state must offer a clear next action. Avoid dead ends.
-
-4. **Progressive complexity** — A single bet should feel effortless. Complexity only reveals when the user's selections demand it (system bets, combinability issues).
-
-5. **Brand-agnostic logic, brand-specific skin** — Behaviour is identical across labels. Only visual theming and configurable toggles differ.
+| # | Principle | Implication |
+|---|-----------|-------------|
+| 1 | Never lose user intent | Stake/selections persist through errors, odds changes, and navigation |
+| 2 | Cost and reward crystal clear | Total stake + returns visible at all times without scrolling past CTA |
+| 3 | Errors are recoverable | Every error offers a clear next action — no dead ends |
+| 4 | Progressive complexity | Single bet = effortless; system bets reveal only when selections demand it |
+| 5 | Brand-agnostic logic, brand-specific skin | Behaviour identical across labels; only visuals differ |
 
 ---
 
@@ -97,191 +139,48 @@ These principles govern all betslip decisions. When in conflict, higher-numbered
 
 ---
 
-## Mobile Journeys
+## User Journeys
 
 ### Placing a Single Bet
 
-**Figma:** [Single Bet Flow](https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk?node-id=28219-88600)
-
-**Entry points:**
-- Tap odds button on any market → selection added → betslip counter increments
-- Bet Bar slides up showing selection summary (see [Bet Bar docs](../bet-bar/))
-
-**Flow:**
-
-| Step | Screen State | User Action | System Response |
-|------|-------------|-------------|-----------------|
-| 1 | Bet Bar visible with 1 selection | Tap Bet Bar to expand | Full betslip slides up from bottom |
-| 2 | Single selection card + stake input | Enter stake via numpad | Returns calculate in real-time |
-| 3 | Stake entered, CTA active | Tap "Place Bet £X.XX" | Loading state on CTA (spinner replaces text) |
-| 4 | Processing | — | Bet submitted to backend |
-| 5 | Success | — | Bet Receipt screen replaces betslip |
-
-**Interaction details:**
-- Stake input auto-focuses on betslip open (keyboard slides up)
-- Quick-stake chips: £1, £2, £5, £10, £20 (configurable per brand)
-- Returns display updates on every keystroke (debounced 100ms)
-- CTA disabled until stake > 0 and ≥ minimum
-- CTA label format: "Place Bet · £{totalStake}" (shows total, not returns)
-- On success: haptic feedback (light impact), bet receipt animates in
-
-**Edge cases:**
-- Odds change during stake input → yellow flash on odds value, no interruption
-- Selection suspended mid-input → selection card shows "Suspended" badge, CTA disabled
-- Network loss during placement → retry dialog with "Try Again" / "Cancel"
-- User backgrounds app during placement → bet continues server-side, receipt shown on return
-
----
+| Step | User Action | System Response |
+|------|-------------|-----------------|
+| 1 | Tap odds button on market | Selection added; bet bar appears with "1" badge |
+| 2 | Tap Bet Bar to expand | Full betslip slides up; stake input auto-focuses |
+| 3 | Enter stake via numpad or quick-stake chips | Returns calculate in real-time (debounced 100ms) |
+| 4 | Tap "Place Bet · £{stake}" | CTA shows spinner; bet submitted |
+| 5 | — | Bet Receipt replaces betslip; haptic feedback (light) |
 
 ### Placing a Multi Bet (Accumulator)
 
-**Figma:** [Multi Bet Flow](https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk?node-id=28219-88620)
-
-**Trigger:** 2+ combinable selections from different events
-
-**Flow:**
-
-| Step | Screen State | User Action | System Response |
-|------|-------------|-------------|-----------------|
-| 1 | Bet type tabs appear: Singles \| Multi | Tap "Multi" tab | Stake input changes to single combined field |
-| 2 | Combined odds displayed | Enter stake | Combined returns shown |
-| 3 | CTA active | Tap "Place Bet" | Same submission flow as singles |
-
-**Key behaviours:**
-- Default tab: **Multi** (when all selections are combinable). Research showed users adding multiple selections intend accas 73% of the time.
-- Combined odds format: fractional by default (UK), configurable per user preference
-- If one selection becomes non-combinable mid-build → auto-switch to Singles tab with explanation toast
-- Acca Boost indicator shows above returns when eligible (≥3 legs)
-
-**Acca Boost display logic:**
-
-```
-IF selections.count >= 3 AND all combinable:
-  Show boost badge: "+{boostPercentage}% Acca Boost"
-  Show original returns (struck through)
-  Show boosted returns (highlighted)
-  Show boost ladder: "Add 1 more for +{nextTierPercentage}%"
-```
-
----
+| Step | User Action | System Response |
+|------|-------------|-----------------|
+| 1 | Add 2+ selections from different events | Bet type tabs appear; Multi tab active by default |
+| 2 | Enter stake in combined field | Combined returns shown with acca odds |
+| 3 | Tap "Place Bet" | Same submission flow as singles |
 
 ### Removing a Selection
 
-**Interaction pattern:**
-- Swipe left on selection card → reveals red "Remove" button (iOS pattern)
-- Tap ✕ button on selection card (always visible, top-right)
-- Both trigger: card collapses with 200ms ease-out animation
-
-**Consequences:**
-
-| Selections remaining | Result |
-|---------------------|--------|
-| 2+ combinable | Multi tab stays, odds recalculate |
-| 1 remaining | Multi/System tabs disappear, revert to single |
-| 0 remaining | Betslip closes, empty state on next open |
-
-**Undo:** Toast appears for 5s: "Selection removed · Undo". Tap undo → card re-expands, odds restore.
+| Interaction | Animation | Result |
+|-------------|-----------|--------|
+| Swipe left on card | Reveals red "Remove" button | Tap to confirm removal |
+| Tap ✕ (top-right of card) | Instant trigger | Card collapses 200ms ease-out |
+| Either method completes | — | Undo toast for 5s; tap to restore |
 
 ---
 
-## Error States
+## Edge Cases & Error States
 
-### Non-Combinable Error
-
-**Figma:** [Non-Combinable States](https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk?node-id=28219-88640)
-
-**Trigger:** User adds selections that cannot be combined (e.g., both teams to win in same match, or correlated markets from same event in a multi).
-
-**Display logic:**
-
-```
-IF new selection conflicts with existing:
-  1. Selection IS added (never reject silently)
-  2. Conflicting selections get orange warning badge
-  3. Banner appears below header: "Some selections can't be combined"
-  4. Multi tab disabled; Singles tab auto-selected
-  5. Conflicting selections grouped with explanation:
-     "These are from the same event and can't go in a multi"
-```
-
-**Resolution options:**
-- Remove one of the conflicting selections
-- Place as individual singles
-- Move conflicting selections to a Build a Bet (if same-event)
-
-**Design decision:** We show the conflict *after* adding rather than blocking the addition. Rationale: users found rejection confusing ("why won't it let me?") vs. explanation helpful ("oh, I see why these clash"). Validated in usability testing Feb 2025.
-
----
-
-### Odds Acceptance
-
-**Figma:** [Odds Change Flow](https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk?node-id=28219-88680)
-
-**Trigger:** Odds change between adding selection and placing bet.
-
-**Three modes (user-configurable in settings):**
-
-| Mode | Behaviour | CTA State |
-|------|-----------|-----------|
-| Always accept | Odds update silently, no interruption | Active |
-| Accept higher only | Higher odds update silently; lower odds pause | Conditional |
-| Never auto-accept | Any change pauses placement | Disabled until accepted |
-
-**"Accept changes" flow (when paused):**
-1. Odds value flashes yellow → settles to new value
-2. Original odds shown struck-through for 3s
-3. CTA changes to: "Accept & Place Bet" (green) / "Cancel" (secondary)
-4. Returns recalculate with new odds
-5. If odds change *again* during acceptance → reset the flow (show newest)
-
-**Price movement indicators:**
-- ↑ Green arrow: odds drifted higher (better for user)
-- ↓ Red arrow: odds shortened (worse for user)
-- Arrow persists for 5s then fades
-
----
-
-## Promotions and Rewards
-
-### Price Boost
-
-**Figma:** [Price Boost in Betslip](https://www.figma.com/design/fBkTpsuWPtoT0uNu3TODhk?node-id=28219-88700)
-
-**Display:**
-- Boosted odds shown in highlight colour (brand-specific: Ladbrokes = red, Coral = yellow)
-- Original odds shown struck-through to the left
-- "BOOSTED" badge on selection card (uses `feedback.success` tokens)
-- Boost flame icon alongside odds value
-
-**Interaction rules:**
-- Boosted selections cannot have stake > boost max stake (varies per offer)
-- If user enters stake > max → inline error: "Max stake for this boost: £{max}"
-- Boost applies to singles only (not combinable into accas unless explicitly allowed)
-- Boost has expiry time → countdown shown if <5 mins remaining
-
-**Research insight (from Odds Boost UXR, Jan 2026):**
-> Users who are "value shoppers" compare boost value across bookmakers. Showing effective % uplift alongside the boosted odds helps comparison. Currently NOT shown — opportunity for future iteration.
-
----
-
-### Acca Boost
-
-**Ladder structure:**
-
-| Legs | Boost | Display |
-|------|-------|---------|
-| 3 | +5% | Entry tier |
-| 4 | +10% | |
-| 5 | +15% | |
-| 6 | +20% | |
-| 7 | +25% | |
-| 8+ | +30% | Max tier |
-
-**Display in betslip:**
-- Boost percentage badge next to combined odds
-- "Your boost: +{X}%" with visual bar showing progress through ladder
-- Below returns: "Boosted returns: £{boostedReturns}" (highlighted)
-- Upsell prompt when 1 leg away from next tier: "Add 1 more for +{next}%!"
+| Edge Case | Behaviour | Resolution |
+|-----------|-----------|------------|
+| Odds change during stake input | Yellow flash on odds value; no interruption (if auto-accept) | User continues; or accepts if manual mode |
+| Selection suspended mid-input | "Suspended" badge; CTA disabled | Wait for market to reopen; or remove selection |
+| Network loss during placement | Retry dialog: "Try Again" / "Cancel" | User retries or cancels |
+| App backgrounded during placement | Bet continues server-side | Receipt shown on return |
+| Non-combinable selections added | Selection IS added (not blocked); conflict explained | Remove one; place as singles; move to BAB |
+| Price Boost + stake exceeds max | Inline error on stake field | Reduce stake to ≤ max |
+| Odds change again during acceptance | Reset flow; show newest odds | User accepts newest or cancels |
+| All selections removed | Betslip closes | Empty state on next open |
 
 ---
 
@@ -304,9 +203,32 @@ IF new selection conflicts with existing:
 
 ---
 
-## Theming
+## Promotions & Rewards
 
-The betslip inherits from DICE L1 tokens and applies L2 Sports-specific overrides:
+### Price Boost
+
+| Rule | Behaviour |
+|------|-----------|
+| Boosted selection present | Show boosted odds in brand highlight colour; original struck through |
+| Boost badge | "BOOSTED" on selection card using `feedback.success` tokens |
+| Stake exceeds max | Inline error: "Max stake for this boost: £{max}" |
+| Boost applies to | Singles only (not combinable into accas unless explicitly allowed) |
+| Boost expiry <5 mins | Show countdown timer |
+
+### Acca Boost Ladder
+
+| Legs | Boost | Display |
+|------|-------|---------|
+| 3 | +5% | Entry tier |
+| 4 | +10% | |
+| 5 | +15% | |
+| 6 | +20% | |
+| 7 | +25% | |
+| 8+ | +30% | Max tier |
+
+---
+
+## Theming
 
 | Brand | CTA Primary | Boost Highlight | Error | Surface |
 |-------|------------|-----------------|-------|---------|
@@ -315,16 +237,37 @@ The betslip inherits from DICE L1 tokens and applies L2 Sports-specific override
 | bwin | `#FFD700` | `#FFD700` | `#D32F2F` | `#1C1C1C` |
 | Sportingbet | `#00A651` | `#00A651` | `#D32F2F` | `#FFFFFF` |
 
-**Note (June 2026):** Currently using hex codes as interim fix. L2 Semantic Tokens being discontinued by DICE; federated design system not yet ready.
+**Note:** Currently using hex codes. L2 Semantic Tokens being discontinued by DICE; federated design system not yet ready.
+
+---
+
+## Animation & Timing
+
+| Interaction | Duration | Easing |
+|-------------|----------|--------|
+| Betslip slides up (open) | 300ms | ease-out |
+| Selection card collapses (remove) | 200ms | ease-out |
+| Undo toast appears | 200ms fade-in | ease-out |
+| Undo toast auto-dismiss | 5000ms | — |
+| Returns recalculate on keystroke | 100ms debounce | — |
+| Odds flash (price change) | 500ms yellow flash | — |
+| Price movement arrow persist | 5000ms then fade | — |
+| CTA spinner (processing) | Until response | — |
+| Bet receipt animate in | 300ms | ease-out |
 
 ---
 
 ## Accessibility
 
 ### Keyboard Navigation
-- Tab order: Selection cards → Bet type tabs → Stake input → Quick-stake chips → CTA
-- Selection removal: focused card → Delete/Backspace key
-- Escape: closes betslip, returns focus to triggering odds button
+
+| Focus Target | Key | Action |
+|-------------|-----|--------|
+| Selection card | Tab | Move focus between cards |
+| Focused card | Delete / Backspace | Remove selection |
+| Betslip open | Escape | Close betslip; return focus to odds button |
+| Stake input | Tab from cards | Focus stake field |
+| CTA | Tab from stake | Focus Place Bet button |
 
 ### Screen Reader Announcements
 
@@ -337,9 +280,12 @@ The betslip inherits from DICE L1 tokens and applies L2 Sports-specific override
 | Boost applied | "Acca Boost applied. {percentage} boost on {legs} selections." |
 
 ### Touch Targets
-- All interactive elements: minimum 44×44pt
-- Swipe-to-remove: requires 60px+ horizontal gesture to prevent accidental triggers
-- Stake input: full-width tap area, not just the visible field
+
+| Element | Minimum Size | Notes |
+|---------|:---:|-------|
+| All interactive elements | 44×44pt | Platform standard |
+| Swipe-to-remove gesture | 60px horizontal | Prevents accidental triggers |
+| Stake input tap area | Full width | Not just the visible field |
 
 ---
 
@@ -347,11 +293,11 @@ The betslip inherits from DICE L1 tokens and applies L2 Sports-specific override
 
 | # | Decision | Alternatives Considered | Rationale | Date |
 |---|----------|------------------------|-----------|------|
-| 1 | Show conflicts after adding, not block | Block addition with toast; Modal confirmation | User testing showed blocking felt like rejection. Adding then explaining felt educational. | Feb 2025 |
-| 2 | Default to Multi tab when ≥2 selections | Default to Singles; No default (remember last) | Analytics: 73% of multi-selection sessions result in acca placement. Reduces taps for majority. | Mar 2025 |
-| 3 | 5-second undo on removal | No undo; Confirmation dialog before remove | Dialog adds friction to a frequent action. Undo is forgiving without being blocking. | Apr 2025 |
-| 4 | Auto-focus stake input on open | No auto-focus; Focus after animation completes | Reduces time-to-place by ~1.5s. Keyboard appears immediately. | May 2025 |
-| 5 | Combined CTA label shows stake not returns | Show returns; Show both; Show "Place Bet" only | Stake = what user commits. Returns = speculative. Clearer commitment signal. | Jun 2025 |
+| 1 | Show conflicts after adding, not block | Block with toast; Modal confirmation | User testing: blocking felt like rejection; explanation felt educational | Feb 2025 |
+| 2 | Default to Multi tab when ≥2 selections | Default to Singles; Remember last | Analytics: 73% of multi-selection sessions → acca. Reduces taps. | Mar 2025 |
+| 3 | 5-second undo on removal | No undo; Confirmation dialog | Dialog adds friction to frequent action. Undo is forgiving without blocking. | Apr 2025 |
+| 4 | Auto-focus stake input on open | No auto-focus; Focus after animation | Reduces time-to-place by ~1.5s. Keyboard appears immediately. | May 2025 |
+| 5 | CTA label shows stake not returns | Show returns; Show both; "Place Bet" only | Stake = user commitment. Returns = speculative. Clearer signal. | Jun 2025 |
 
 ---
 
@@ -360,8 +306,8 @@ The betslip inherits from DICE L1 tokens and applies L2 Sports-specific override
 | Metric | Target | Current | Source |
 |--------|--------|---------|--------|
 | Bet placement completion rate | >85% | 82% | Analytics |
-| Error recovery rate (user continues after error) | >60% | 54% | Analytics |
-| Time to place (single bet, from betslip open) | <15s | 12s | Analytics |
+| Error recovery rate | >60% | 54% | Analytics |
+| Time to place (single, from open) | <15s | 12s | Analytics |
 | Odds acceptance rate (when prompted) | >70% | 68% | Analytics |
 | Betslip abandonment rate | <20% | 22% | Analytics |
 
@@ -371,9 +317,9 @@ The betslip inherits from DICE L1 tokens and applies L2 Sports-specific override
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 4.0 | 2026-06-03 | Tomek | Restructured to documentation guidelines format |
 | 3.1 | 2026-06-02 | Tomek | Added accessibility spec, decision log, metrics |
 | 3.0 | 2026-02-11 | David | Full shipped spec — all bet types documented |
-| 2.5 | 2025-11-20 | David | Added system bets, BAB+ flows |
 | 2.0 | 2025-08-14 | David | Redesign shipped — new component architecture |
 | 1.0 | 2025-03-01 | David | Initial betslip documentation |
 
@@ -383,7 +329,7 @@ The betslip inherits from DICE L1 tokens and applies L2 Sports-specific override
 
 - [Bet Bar](../bet-bar/) — Betslip launcher and selection preview
 - [Quick Bet](../quick-bet/) — Simplified single-bet placement (bypasses full betslip)
-- [Sports Promos](../sports-promos/) — Reward token integration
+- [Sports Token Promos](../sports-token-promos/) — Reward token integration
 - [Bet Builder](../bet-builder/) — BAB/BAB+ construction flows
 - [Price Boosts](../price-boosts/) — Boost mechanics and display
 - [My Bets](../../post-bet/my-bets/) — Post-placement bet tracking

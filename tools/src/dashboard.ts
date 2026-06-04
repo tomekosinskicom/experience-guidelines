@@ -134,6 +134,12 @@ app.use(uploadRouter);
 
 app.get('/', (_req, res) => { res.send(HTML); });
 
+// Chat interface
+app.get('/chat', (_req, res) => {
+  const chatHtml = fs.readFileSync(path.resolve(ROOT_DIR, 'tools/src/chat.html'), 'utf-8');
+  res.send(chatHtml);
+});
+
 // Serve static assets (images, etc.) from the repo root
 app.use(express.static(ROOT_DIR, { 
   extensions: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'],
@@ -248,6 +254,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <div class="content" id="content">
       <div id="homepage">
         <div style="text-align:left;max-width:900px;margin:0 auto;padding:0">
+          <div id="pillar-cards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px"></div>
           <h2 style="font-size:20px;color:#fff;margin-bottom:20px;border:none">Recent Activity</h2>
           <div id="activity-list" style="margin-bottom:32px"></div>
           <h2 style="font-size:20px;color:#fff;margin-bottom:20px;border:none">Experience Map</h2>
@@ -601,36 +608,26 @@ async function openLobby(pillarSlug, subdomainSlug, areaSlug, skipHistory) {
   }
   if (overviewIntroHtml) html += overviewIntroHtml;
 
-  // Recently updated
-  if (recentDocs.length > 0) {
-    html += '<h2 style="font-size:16px;color:#c9d1d9;margin-bottom:12px;border:none">Recently Updated</h2>';
-    html += '<div style="display:grid;gap:8px;margin-bottom:24px">';
-    recentDocs.forEach(d => {
+  // All documents with sorting
+  if (otherDocs.length > 0) {
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+    html += '<h2 style="font-size:16px;color:#c9d1d9;border:none;margin:0">All Documents</h2>';
+    html += '<div style="display:flex;gap:0;background:#21262d;border-radius:6px;overflow:hidden">';
+    html += '<button id="sort-recent" class="btn btn-sm" style="font-size:11px;padding:4px 12px;border-radius:6px 0 0 6px;background:#58a6ff;color:#fff;border:none" onclick="sortLobbyDocs(\\'recent\\')">Recent</button>';
+    html += '<button id="sort-alpha" class="btn btn-sm" style="font-size:11px;padding:4px 12px;border-radius:0 6px 6px 0;background:#21262d;color:#8b949e;border:none" onclick="sortLobbyDocs(\\'alpha\\')">A–Z</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div id="lobby-docs-list" style="display:grid;gap:8px;margin-bottom:24px">';
+    otherDocs.sort((a, b) => (b.lastUpdated || '').localeCompare(a.lastUpdated || '')).forEach(d => {
       const icon = typeIcons[d.documentType] || '📄';
       const title = d.title || d.path.split('/').pop();
-      html += '<div style="background:#161b22;border:1px solid #30363d;border-radius:6px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color 0.15s" onclick="openDoc(\\'' + d.path + '\\')" onmouseenter="this.style.borderColor=\\'#58a6ff\\'" onmouseleave="this.style.borderColor=\\'#30363d\\'">';
+      html += '<div style="background:#161b22;border:1px solid #30363d;border-radius:6px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color 0.15s" data-title="' + (title || '').replace(/"/g, '') + '" data-updated="' + (d.lastUpdated || '') + '" onclick="openDoc(\\'' + d.path + '\\')" onmouseenter="this.style.borderColor=\\'#58a6ff\\'" onmouseleave="this.style.borderColor=\\'#30363d\\'">';
       html += '<span style="font-size:16px">' + icon + '</span>';
       html += '<div style="flex:1;min-width:0">';
       html += '<div style="font-size:13px;color:#e1e4e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + title + '</div>';
-      html += '<div style="font-size:11px;color:#8b949e">' + (d.documentType || 'document') + (d.lastUpdated ? ' · ' + d.lastUpdated : '') + '</div>';
+      html += '<div style="font-size:11px;color:#8b949e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px">' + ((d.summary && d.summary.length > 180 ? d.summary.slice(0, 180) + '…' : d.summary) || (d.documentType || 'document') + (d.lastUpdated ? ' · ' + d.lastUpdated : '')) + '</div>';
       html += '</div>';
       html += '<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:#21262d;color:#8b949e">' + (d.status || 'draft') + '</span>';
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-
-  // All documents
-  if (otherDocs.length > 0) {
-    html += '<h2 style="font-size:16px;color:#c9d1d9;margin-bottom:12px;border:none">All Documents</h2>';
-    html += '<div style="display:grid;gap:6px;margin-bottom:24px">';
-    otherDocs.forEach(d => {
-      const icon = typeIcons[d.documentType] || '📄';
-      const title = d.title || d.path.split('/').pop();
-      html += '<div style="padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;border-radius:4px;transition:background 0.15s" onclick="openDoc(\\'' + d.path + '\\')" onmouseenter="this.style.background=\\'#161b22\\'" onmouseleave="this.style.background=\\'transparent\\'">';
-      html += '<span style="font-size:14px">' + icon + '</span>';
-      html += '<span style="font-size:13px;color:#c9d1d9;flex:1">' + title + '</span>';
-      html += '<span style="font-size:11px;color:#484f58">' + (d.documentType || '') + '</span>';
       html += '</div>';
     });
     html += '</div>';
@@ -653,6 +650,31 @@ function filterTree(query) {
   const q = query.toLowerCase();
   const filtered = q ? docs.filter(d => d.path.toLowerCase().includes(q) || d.title.toLowerCase().includes(q) || d.tags.some(t => t.includes(q))) : docs;
   renderTree(filtered);
+}
+
+function sortLobbyDocs(mode) {
+  const list = document.getElementById('lobby-docs-list');
+  if (!list) return;
+  const items = Array.from(list.children);
+  items.sort((a, b) => {
+    if (mode === 'alpha') {
+      return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
+    }
+    return (b.getAttribute('data-updated') || '').localeCompare(a.getAttribute('data-updated') || '');
+  });
+  items.forEach(item => list.appendChild(item));
+  // Toggle active style
+  var recentBtn = document.getElementById('sort-recent');
+  var alphaBtn = document.getElementById('sort-alpha');
+  if (recentBtn && alphaBtn) {
+    if (mode === 'recent') {
+      recentBtn.style.background = '#58a6ff'; recentBtn.style.color = '#fff';
+      alphaBtn.style.background = '#21262d'; alphaBtn.style.color = '#8b949e';
+    } else {
+      alphaBtn.style.background = '#58a6ff'; alphaBtn.style.color = '#fff';
+      recentBtn.style.background = '#21262d'; recentBtn.style.color = '#8b949e';
+    }
+  }
 }
 
 async function openDoc(docPath, skipHistory) {
@@ -1409,6 +1431,24 @@ async function loadExperienceMap() {
   const res = await fetch('/api/experience-map');
   const map = await res.json();
   const el = document.getElementById('experience-map');
+
+  // Pillar entry cards
+  const pillarCardsEl = document.getElementById('pillar-cards');
+  if (pillarCardsEl) {
+    let cardsHtml = '';
+    map.pillars.forEach(pillar => {
+      const totalAreas = pillar.subdomains.reduce((sum, s) => sum + s.areas.length, 0);
+      const docAreas = pillar.subdomains.reduce((sum, s) => sum + s.areas.filter(a => a.documented).length, 0);
+      const subNames = pillar.subdomains.map(s => s.name).join(' · ');
+      cardsHtml += '<div style="background:#161b22;border:1px solid #30363d;border-radius:12px;padding:24px;cursor:pointer;transition:border-color 0.15s,transform 0.15s" onclick="openDoc(\\'pillars/' + pillar.slug + '/index.md\\')" onmouseenter="this.style.borderColor=\\'#58a6ff\\';this.style.transform=\\'translateY(-2px)\\'" onmouseleave="this.style.borderColor=\\'#30363d\\';this.style.transform=\\'none\\'">';
+      cardsHtml += '<div style="font-size:32px;margin-bottom:12px">' + pillar.icon + '</div>';
+      cardsHtml += '<div style="font-size:18px;font-weight:600;color:#fff;margin-bottom:6px">' + pillar.name + '</div>';
+      cardsHtml += '<div style="font-size:12px;color:#8b949e;margin-bottom:12px">' + subNames + '</div>';
+      cardsHtml += '<div style="font-size:12px;color:#58a6ff">' + docAreas + ' / ' + totalAreas + ' areas documented</div>';
+      cardsHtml += '</div>';
+    });
+    pillarCardsEl.innerHTML = cardsHtml;
+  }
 
   let html = '';
 

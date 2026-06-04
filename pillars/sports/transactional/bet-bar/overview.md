@@ -23,8 +23,6 @@ figma-source: "https://www.figma.com/design/okCOPUzM7FpDG7crVXvkFS/Betslip-Bar-S
 
 The Bet Bar is the persistent bottom-of-screen component that serves as the primary entry point to the full betslip. It gives users continuous visibility of their bet state — selection count, accumulative odds, and active rewards — without needing to open the betslip.
 
-![Bet Bar Overview](./assets/bet-bar-overview.png)
-
 **Figma source:** [Betslip Bar — 🚀 Shipped](https://www.figma.com/design/okCOPUzM7FpDG7crVXvkFS/Betslip-Bar-Shipped)
 
 **Status:** Shipped and live across all brands

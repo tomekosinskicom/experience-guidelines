@@ -108,7 +108,7 @@ export function getExperienceMap(existingPaths: string[]): ExperienceMap {
               area('Bet Bar', 'sports', 'transactional'),
               area('Quick Bet', 'sports', 'transactional'),
               area('Bet Builder', 'sports', 'transactional'),
-              area('Sports Promos', 'sports', 'transactional'),
+              area('Sports Token Promos', 'sports', 'transactional'),
               area('Price Boosts', 'sports', 'transactional'),
               area('Acca Boost', 'sports', 'transactional'),
             ],

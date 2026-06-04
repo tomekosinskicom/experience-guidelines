@@ -6,6 +6,7 @@ document-type: overview
 owner: Sports UX Team
 last-updated: 2026-06-02
 status: published
+maturity: documented
 tags:
   - bet-insurance
   - acca-boost
@@ -23,6 +24,56 @@ Bet Insurance is a promotional reward within the Sports Promos experience area. 
 
 **Jira:** SPO-290536, SPO-305104
 
+---
+
+## Eligibility Rules
+
+| Rule | Condition | Result |
+|------|-----------|--------|
+| Bet type | Must be an accumulator (multiple) | Single bets do NOT qualify |
+| Minimum legs | User must have ≥ N qualifying legs (configurable) | Below threshold: "X more legs needed" messaging |
+| Qualifying odds per leg | Each leg must meet minimum odds threshold | Legs below threshold do not count toward eligibility |
+| Market eligibility | Selection must be from an insurable market | Excluded markets do not count |
+| Insurance token available | User has been awarded an insurance token (promo) | Without token, feature not shown |
+| Combined with Acca Boost | Both tokens available and bet qualifies | Dual-reward UI shown (boost + insurance) |
+| Insurance only | Insurance token available, no Acca Boost token | Insurance-only UI variant shown |
+
+<!-- TODO: Define the exact minimum legs requirement — is it 5 legs across all brands or configurable? -->
+<!-- TODO: Document which markets/sports are excluded from insurance eligibility. -->
+<!-- TODO: Clarify the insurance payout rule — is it "one leg loses = full stake back" or are there partial rules? -->
+
+---
+
+## State Table — Betslip with Insurance
+
+| State | Condition | Visual | User Action |
+|-------|-----------|--------|-------------|
+| **Not qualified (legs missing)** | User has fewer than required legs | "Add X more legs to qualify" message; insurance badge greyed | Add more selections |
+| **Qualified — insurance available** | Enough qualifying legs; token available | Insurance badge active; drawer accessible | Select insurance from drawer |
+| **Insurance selected** | User has applied insurance to bet | Green insurance badge; payout info displayed | Remove insurance or place bet |
+| **Insurance + Acca Boost selected** | Both rewards applied | Dual badge row; combined payout display | Remove either reward or place bet |
+| **Odds changed** | Odds shift after selection | Odds change indicator; insurance/boost status preserved | Accept new odds or remove |
+| **Non-combinable selections** | Legs cannot form valid acca | Error messaging; insurance status on valid legs only | Remove conflicting selections |
+| **Bet placed (post-bet)** | Bet confirmed with insurance | Insurance badge in My Bets (active & settled) | View in My Bets |
+| **Bet lost (one leg)** | One leg lost, rest won | Insurance payout triggered | Stake returned per insurance terms |
+| **Bet lost (multiple legs)** | More than one leg lost | Insurance does NOT apply (standard loss) | N/A |
+| **Bet won** | All legs won | Standard win payout (insurance not needed) | N/A |
+
+---
+
+## State Transitions
+
+| From | Trigger | To | UI Change |
+|------|---------|-----|-----------|
+| Not qualified | User adds qualifying leg to reach minimum | Qualified | Badge activates; drawer becomes available |
+| Qualified | User selects insurance from drawer | Insurance selected | Badge turns green; payout info appears |
+| Insurance selected | User removes a leg below minimum | Not qualified | Badge greys out; warning shown |
+| Insurance selected | User places bet | Post-bet (insured) | Confirmation shows insurance active |
+| Insurance selected | User deselects insurance | Qualified | Badge reverts; payout info removed |
+| Qualified (boost available) | User selects both boost and insurance | Dual reward | Combined badge row; dual payout display |
+
+---
+
 ## User Journeys
 
 ### Acca Boost + Insurance Happy Journey
@@ -32,6 +83,8 @@ The primary flow where a user qualifies for both Acca Boost and Bet Insurance on
 ### Insurance-Only Happy Journey
 
 A flow where the user qualifies for Bet Insurance without Acca Boost. The insurance badge and drawer appear independently in the bet bar and betslip.
+
+---
 
 ## Betslip States
 
@@ -54,6 +107,8 @@ Insurance and Acca Boost badges appear across different bet types:
 - **Medium badges** — used in bet bar and betslip headers
 - **Betslip badges** — combined Insurance + Acca Boost badge row
 - **Post-bet badges** — shown in My Bets for settled and active insured bets
+
+---
 
 ## Components
 
@@ -79,6 +134,8 @@ A modal (sourced from Dice design system) that introduces the Bet Insurance feat
 
 A notification component (sourced from Sports) that confirms insurance is active on the user's bet.
 
+---
+
 ## Integration Points
 
 | Touchpoint | Source | Description |
@@ -91,6 +148,23 @@ A notification component (sourced from Sports) that confirms insurance is active
 | Onboarding Modal | Dice | First-time user education modal |
 | Container Message | Sports | Confirmation toast/banner |
 | Badges | Dice | Small badge components from design system |
+
+---
+
+## Decision Rules — When to Show Insurance UI
+
+| Condition | Show Insurance UI? | Variant |
+|-----------|-------------------|---------|
+| User has insurance token AND qualifying acca | ✅ Yes | Full insurance badge + drawer |
+| User has insurance token BUT too few legs | ✅ Yes (partial) | "X more legs needed" progress indicator |
+| User has insurance token AND Acca Boost token | ✅ Yes | Combined dual-reward UI |
+| User has NO insurance token | ❌ No | Standard betslip (no insurance elements) |
+| User has insurance token BUT single bet | ❌ No | Insurance requires accumulator |
+| Bet is Build a Bet (SGP) | ❌ No | Insurance applies to multi-event accas only |
+
+<!-- TODO: Confirm if Build a Bet (BAB) qualifies for insurance or only traditional multi-event accumulators. -->
+
+---
 
 ## Design Phases
 
@@ -105,6 +179,8 @@ A notification component (sourced from Sports) that confirms insurance is active
 
 - Combined Acca Boost + Insurance ladder
 - Enhanced drawer with both rewards visible simultaneously
+
+---
 
 ## Related Areas
 

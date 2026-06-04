@@ -6,6 +6,7 @@ document-type: overview
 owner: Sports UX
 last-updated: 2025-06-13
 status: shipped
+maturity: documented
 tags:
   - greyhounds
   - racing
@@ -29,6 +30,8 @@ The designs were influenced by GBS (retail greyhound betting) and used as refere
 - Very popular sport in UK & Ireland
 - Covers one of the feature gaps with LCG (competitor parity)
 
+---
+
 ## Scope & Requirements
 
 ### High-Level Scope
@@ -38,6 +41,8 @@ The project covers the full greyhound digital betting journey from entry point t
 ### MoSCoW Prioritisation
 
 Requirements were prioritised using the MoSCoW method, covering availability and eligibility criteria for the greyhound racing product on digital platforms.
+
+---
 
 ## User Journeys
 
@@ -62,6 +67,8 @@ The greyhound betting journey covers the following key stages:
 
 ### No Races State
 - Empty state handling when no races are available for the selected time period
+
+---
 
 ## Race Card
 
@@ -89,6 +96,48 @@ The greyhound betting journey covers the following key stages:
 - Extended selection interface compared to forecast
 - Similar interaction patterns to forecast but with three positions
 
+---
+
+## Race Card State Table
+
+| State | Visual Indicator | User Actions Available | Betting Available |
+|-------|-----------------|----------------------|-------------------|
+| **Pre-Race (default)** | Standard race card with active odds buttons | Select runners, add to betslip, toggle forecast/tricast | ✅ Yes |
+| **Race Off** | Locked visual; "Race Off" indicator | None — view only | ❌ No |
+| **Suspended** | Greyed-out odds, suspended indicator | None — view only | ❌ No |
+| **Resulted** | Finishing positions displayed, winning trap highlighted | View results only | ❌ No |
+| **No Races** | Empty state illustration/message | Navigate to different time period | ❌ N/A |
+
+---
+
+## Forecast / Tricast Selection States
+
+| State | Meaning | Visual | Interaction |
+|-------|---------|--------|-------------|
+| **Active** | Runner available for selection | Standard button colour | Tappable — adds to forecast/tricast |
+| **Selected (1st)** | Runner selected as 1st place | Highlighted with position badge "1" | Tappable — deselects |
+| **Selected (2nd)** | Runner selected as 2nd place | Highlighted with position badge "2" | Tappable — deselects |
+| **Selected (3rd)** | Tricast only — 3rd place | Highlighted with position badge "3" | Tappable — deselects |
+| **Disabled** | Runner not available (non-runner/scratched) | Greyed out | Non-interactive |
+| **Locked** | Race off — no further selections | Locked icon, greyed | Non-interactive |
+
+---
+
+## Interaction Timing
+
+| Event | Timing Rule | User Impact |
+|-------|-------------|-------------|
+| Race goes off | Immediate lock — all betting buttons transition to locked state | No further bets accepted |
+| Race results available | After stewards confirm (varies by track) | Resulted state replaces race-off state |
+| Next Race tab auto-advance | When current "next race" goes off, tab advances to the following race | User sees fresh upcoming race |
+| Forecast/Tricast toggle | Instant UI mode change | Market view switches to positional selection |
+| Odds update (pre-race) | Real-time price feed | Buttons flash to indicate price change |
+
+<!-- TODO: Confirm exact timing for auto-advance to next race — is it immediate on race-off or delayed? -->
+<!-- TODO: Document non-runner handling — what happens to forecast/tricast selections when a runner is scratched pre-race? -->
+
+---
+
 ## Race States
 
 ### Race Off
@@ -100,17 +149,30 @@ The greyhound betting journey covers the following key stages:
 - Display of race results with finishing positions
 - Clear indication of winning trap/greyhound
 
+---
+
 ## Bet Slip Integration
 
 - Standard bet slip integration for greyhound selections
 - Supports single, forecast, and tricast bet types
 - Follows existing betslip patterns from the platform
 
+---
+
 ## Design Decisions
 
 ### Trap Silks & Colours
 - Standard greyhound trap colours (1-6) used for visual identification
 - Large and small variants for different contexts
+
+| Trap Number | Colour |
+|------------|--------|
+| 1 | Red |
+| 2 | Blue |
+| 3 | White |
+| 4 | Black |
+| 5 | Orange |
+| 6 | Black & White Stripes |
 
 ### Mobile Drop-Down Switcher
 - Market switcher displays as dropdown on mobile for space efficiency
@@ -124,6 +186,8 @@ The greyhound betting journey covers the following key stages:
 - Dedicated greyhound navigation within the racing section
 - Clear separation from horse racing while maintaining consistent patterns
 
+---
+
 ## Platform Support
 
 | Feature | Mobile | Desktop |
@@ -135,6 +199,20 @@ The greyhound betting journey covers the following key stages:
 | Tricast | ✅ | ✅ |
 | Race Off State | ✅ | ✅ |
 | Resulted | ✅ | ✅ |
+
+---
+
+## When to Use This Pattern vs Horse Racing
+
+| Scenario | Use Greyhounds Pattern | Use Horse Racing Pattern |
+|----------|----------------------|--------------------------|
+| 6 or fewer runners per race | ✅ | ❌ |
+| Trap-based identification (numbered traps 1-6) | ✅ | ❌ |
+| Named runners with jockey/trainer info | ❌ | ✅ |
+| Forecast/Tricast with fixed trap positions | ✅ | Use equivalent HR forecast pattern |
+| Form data from Racing Post | ✅ (simplified) | ✅ (full form card) |
+
+---
 
 ## Related Areas
 

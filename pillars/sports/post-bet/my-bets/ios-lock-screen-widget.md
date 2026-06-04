@@ -6,6 +6,7 @@ document-type: patterns
 owner: Sports UX Team
 last-updated: 2026-05-29
 status: published
+maturity: documented
 tags:
   - ios
   - widget
@@ -27,6 +28,41 @@ The iOS Lock Screen Widget enables users to track their active bets directly fro
 
 **Status:** Final Designs (Ready for Dev)
 
+---
+
+## Widget State Table
+
+| State | Condition | Display Content | User Action |
+|-------|-----------|----------------|-------------|
+| **Live (in-play)** | Tracked bet has at least one live event | Event name, teams, current score, user's selection, odds, live indicator | View only (tap opens app to My Bets) |
+| **Pre-match** | Tracked bet event hasn't started yet | Event name, teams, kick-off time, user's selection, odds | View only |
+| **Partially settled** | Multi-leg bet with some legs settled | Settled legs (✓/✗), remaining live legs, combined status | View only |
+| **Won** | Bet fully settled as winner | Win indicator, final score, returns amount | View only; widget eligible for auto-switch |
+| **Lost** | Bet fully settled as loser | Loss indicator, final score | View only; widget eligible for auto-switch |
+| **Cashed out** | User cashed out the tracked bet | Cash out confirmed indicator | View only; widget eligible for removal |
+| **Void** | Bet voided by system | Void indicator | View only |
+| **No active bet tracked** | No bets currently tracked | Empty state / prompt to track a bet | Tap opens app |
+| **Tracking disabled** | User turned off tracking | Widget not shown on lock screen | N/A |
+
+---
+
+## Display Rules
+
+| Rule | Condition | Behaviour |
+|------|-----------|-----------|
+| Show widget | User has enabled tracking AND has ≥ 1 active tracked bet | Widget visible on lock screen |
+| Hide widget | User has no tracked bets OR tracking disabled | Widget not rendered |
+| Auto-update | Tracked event is live | Scores and status refresh in near real-time |
+| Bet settles (future) | Tracked bet resolves | Show result; auto-switch to next active bet (Phase 2) |
+| Multiple bets tracked | User tracks more than one bet | Pick scroller allows cycling between bets |
+| Build a Bet display | Tracked bet is BAB/SGP | Show event + combined odds + leg count |
+| Thumbnail (small slot) | Widget placed in compact lock screen slot | Minimal info: team icons, score, status dot |
+
+<!-- TODO: Define refresh rate for live scores — how frequently does the widget poll for updates? -->
+<!-- TODO: Confirm iOS widget size constraints — what are the exact pixel dimensions for each widget size? -->
+
+---
+
 ## Entry Points
 
 ### From My Bets
@@ -47,6 +83,21 @@ User journey from the bet confirmation screen after placing via full betslip:
 User journey from Quick Bet confirmation:
 - Same flow as betslip but originating from the Quick Bet confirmation screen
 
+### Entry Point Decision Rules
+
+| Context | Show Tracking Option? | CTA Type |
+|---------|----------------------|----------|
+| My Bets — active single bet (live) | ✅ Yes | Icon + tooltip |
+| My Bets — active single bet (pre-match) | ✅ Yes | Icon + tooltip |
+| My Bets — active accumulator (live) | ✅ Yes | Icon + tooltip |
+| My Bets — settled bet | ❌ No | N/A |
+| Bet Summary — just placed, event is live | ✅ Yes | Inline CTA |
+| Bet Summary — just placed, event pre-match | ✅ Yes | Inline CTA |
+| Quick Bet confirmation | ✅ Yes | Inline CTA |
+| First-time user (never tracked before) | ✅ Yes + Onboarding modal | Modal + CTA |
+
+---
+
 ## Onboarding
 
 ### After Logging In
@@ -55,6 +106,10 @@ Onboarding flow presented to users after login:
 - Modal or tooltip educating the user about lock screen widget availability
 - Clear CTA to enable the feature
 - Dismissible for users who don't want it
+
+<!-- TODO: Define onboarding trigger — is it shown once ever, once per session, or only after first eligible bet? -->
+
+---
 
 ## Widget Design
 
@@ -82,14 +137,22 @@ For multi-leg bets, a scrollable pick display allowing users to see individual s
 
 A compact widget variant for the smaller lock screen widget slot showing minimal bet information (team icons, score, status indicator).
 
+---
+
 ## Multi-Bet Ideal Journey
 
 The happy path for tracking a multi-selection bet (Build a Bet+):
-- User places BAB+ bet
-- Enables lock screen tracking from bet confirmation
-- Widget appears on lock screen showing combined bet status
-- As events progress, the widget updates with live scores
-- On settlement, the widget shows win/loss result
+
+| Step | Action | Widget Shows |
+|------|--------|-------------|
+| 1 | User places BAB+ bet | N/A (bet just placed) |
+| 2 | User enables lock screen tracking from bet confirmation | Widget appears with event + combined odds |
+| 3 | First event goes live | Widget updates with live score |
+| 4 | Events progress | Widget updates scores in real-time |
+| 5 | Individual legs settle | Settled legs show ✓/✗ |
+| 6 | All legs settled | Final result shown (win/loss + returns) |
+
+---
 
 ## Future Enhancements (Not Ready for Dev)
 
@@ -108,6 +171,8 @@ Showing a modal after the user cashes out a tracked bet, asking if they want to 
 ### Disabling Live Tracking in Settled Bets
 
 UI for disabling the widget from within the settled bets view.
+
+---
 
 ## Related Areas
 
